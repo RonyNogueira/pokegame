@@ -1,0 +1,30 @@
+.side-menu {
+  position: fixed;
+  left: 15px;
+  top: 30px;
+  &__circle {
+    background-color: #00d68f;
+    width: 53px;
+    height: 53px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #004a45;
+    margin-bottom: 15px;
+  }
+  &__plus {
+    background-color: #ff3d71;
+    border: 4px solid #db2c66;
+    width: 53px;
+    height: 53px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      background-color: transparent;
+      border: none;
+    }
+  }
+}

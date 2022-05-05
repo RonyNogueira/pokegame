@@ -1,0 +1,17 @@
+.start-page{
+    background: url("../img/bg.png") no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    margin: 0;
+        &__avatar-range{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+                &__boy{
+                    width: 80px;
+                    height: auto;
+                }
+        }
+}
