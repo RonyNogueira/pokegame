@@ -1,12 +1,17 @@
 import bulba from "../../assets/img/001.png"
 import pokeball from "../../assets/img/pokeball.png"
 import closeIcon from "../../assets/img/close.png"
+import { useSelector, useDispatch } from "react-redux"
+import { toggle } from "../../features/openModal"
 
-const Modal = ({show})=>{
+const Modal = ()=>{
+    const openModal = useSelector((state)=>state.openModal.open)
+    const dispacth = useDispatch()
+
     return(
-        <div className={show ? "modal" : "modal close"}>
+        <div className={openModal ? "modal" : "modal close"}>
             <div className="modal__content">
-                <img className="modal__content__close-icon" src={closeIcon} alt="botão fechar modal" />
+                <img onClick={()=>dispacth(toggle())} className="modal__content__close-icon" src={closeIcon} alt="botão fechar modal" />
                 <div className="modal__content__box">
                     <div className="modal__content__box__img">
                         <img src={bulba} alt="" />
