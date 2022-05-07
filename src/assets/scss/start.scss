@@ -9,9 +9,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            &__content{
+                position: relative;
+                &.error{
+                    &::after{
+                        content: url("../img/error.png");
+                        width: 30px;
+                        height: 30px;
+                        position: absolute;
+                        position: absolute;
+                        top: -55px;
+                        left: 5px;
+                    }
+                }
+
+                button{
+                    background-color: transparent;
+                    border: none;
+               
+                }
                 &__boy{
                     width: 80px;
                     height: auto;
+                    &.error{
+                        cursor: not-allowed;
+                    }
                 }
+               
+            }
+              
         }
 }

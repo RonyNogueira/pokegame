@@ -10,6 +10,7 @@ const initialState = {
     height: 0,
     weight: 0,
   },
+  listPokemon: [],
 };
 
 export const pokemonData = createSlice({
@@ -19,9 +20,12 @@ export const pokemonData = createSlice({
     setPokemon: (state, action) => {
       state.pokemon = action.payload;
     },
+    setListPokemon: (state, action) => {
+      state.listPokemon.push(action.payload);
+    },
   },
 });
 
-export const { setPokemon } = pokemonData.actions;
+export const { setPokemon, setListPokemon } = pokemonData.actions;
 
 export default pokemonData.reducer;

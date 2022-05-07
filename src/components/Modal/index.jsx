@@ -44,9 +44,9 @@ const Modal = ()=>{
 
                     <div className="modal__content__box__type__pokemon-type">
                         {
-                            pokemon.types.map(({type})=>{
+                            pokemon.types.map(({type, index})=>{
                                 const {color,pt_br} = typeColors.find((color)=>color.name === type.name)
-                                return <span style={{backgroundColor: `#${color}`}}>{pt_br}</span>
+                                return <span key={index} style={{backgroundColor: `#${color}`}}>{pt_br}</span>
                             })
                         }
                         
