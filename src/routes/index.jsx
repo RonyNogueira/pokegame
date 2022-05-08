@@ -9,6 +9,7 @@ const RoutePath = ()=>{
             <Routes>
                 <Route path="/" element={<Home/>} />
                 <Route path="/start" element={<Start/>}/>
+                <Route path="*" element={<Home/>}/>
             </Routes>
         </BrowserRouter>
     )

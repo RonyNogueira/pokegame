@@ -1,25 +1,71 @@
-import bulba from "../../assets/img/001.png"
+import React, {useState,useEffect} from "react"
 import pokeball from "../../assets/img/pokeball.png"
 import closeIcon from "../../assets/img/close.png"
 import { useSelector, useDispatch } from "react-redux"
 import { toggle } from "../../features/openModal"
 import typeColors from "../../utils/typeColors.json"
+import {orderPokemon, releasePokemon, changePokemonName} from "../../features/pokemon"
+import editIcon from "../../assets/img/editIcon.png"
+import confirmIcon from "../../assets/img/confirmIcon.png"
+import cancelIcon from "../../assets/img/cancelIcon.png"
+
 
 const Modal = ()=>{
     const openModal = useSelector((state)=>state.openModal.open)
     const pokemon = useSelector((state)=>state.pokemonData.pokemon)
     const dispatch = useDispatch()
+    const isEdit = useSelector((state)=>state.openModal.isEdit)
+
+    const [name, setName] = useState(pokemon.name)
+    const [editName, setEditName] = useState(false)
+
+    const handleSavePokemon = ()=>{
+        dispatch(orderPokemon(pokemon))
+        dispatch(toggle({isEdit:false}))
+    }
+
+    const handleReleasePokemon =()=>{
+        dispatch(releasePokemon(pokemon))
+        dispatch(toggle({isEdit:false}))
+    }
+
+    const handleClose = ()=>{
+        setEditName(false)
+        dispatch(toggle({isEdit:false}))
+    }
+
+    const handleChangePokemonName = ()=>{
+       dispatch(changePokemonName(name))
+       setEditName(false)
+    }
+
+    useEffect(()=>{
+        setName(pokemon.name)
+    },[pokemon.name])
+    
 
     return(
         <div className={openModal ? "modal" : "modal close"}>
             <div className="modal__content">
-                <img onClick={()=>dispatch(toggle())} className="modal__content__close-icon" src={closeIcon} alt="botão fechar modal" />
+                <img onClick={handleClose} className="modal__content__close-icon" src={closeIcon} alt="botão fechar modal" />
                 <div className="modal__content__box">
                     <div className="modal__content__box__img">
                         <img src={pokemon.image} alt="" />
                     </div>
                     <div className="modal__content__box__info">
-                        <h1>{pokemon.name}</h1>
+                        {
+                            editName ? 
+                            <>
+                                <input onChange={(e)=>setName(e.target.value)} className="form-control" type="text" value={name} /> 
+                                <button onClick={handleChangePokemonName}> <img src={confirmIcon} alt="" /></button>
+                                <button onClick={()=>setEditName(false)}> <img src={cancelIcon} alt="" /></button>
+                            </>
+                            :
+                            <>
+                                <h1>{pokemon.name}</h1>
+                                { isEdit && <img onClick={()=>setEditName(!editName)} className="modal__content__box__info__edit-icon" src={editIcon} alt="" /> }
+                            </>
+                        }
                     </div>
                     <div className="row">
                         <div className="col-4 col-lg-4 modal__content__box__status">
@@ -39,7 +85,16 @@ const Modal = ()=>{
                     <div className="row modal__content__box__type">
 
                     <div className="modal__content__box__type__pokeball-img">
-                        <button className="btn"><img src={pokeball} alt="uma pokebola" /></button>
+                        {
+                            !isEdit ? 
+                                <button onClick={handleSavePokemon} className="btn">
+                                    <img src={pokeball} alt="uma pokebola" />
+                                </button>
+                            :
+                                <button onClick={handleReleasePokemon} className="btn btn-release btn-custom">
+                                    Liberar Pokemon
+                                </button>
+                        }
                     </div>
 
                     <div className="modal__content__box__type__pokemon-type">

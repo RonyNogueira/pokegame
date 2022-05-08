@@ -1,21 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import questionMark from  '../../assets/img/question-mark.png'
 import plusIcon from '../../assets/img/plus.png' 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector,  } from "react-redux";
+import { setListPokemon, setPokemon } from "../../features/pokemon";
+import { toggle } from "../../features/openModal";
 
-const teste = [0,1,2,3,4,5,6,7,8,9]
-const newArr = teste.slice(0,6)
+
 
 const SideMenu = ()=>{
     const listPokemon = useSelector((state)=>state.pokemonData.listPokemon)
-    const log = (pokemon)=>{
-        console.log(pokemon)
+    const dispatch = useDispatch();
+    
+    const handleEditPokemon = (pokemon)=>{
+        if(pokemon.isEmpty) return
+       dispatch(setPokemon(pokemon))
+       dispatch(toggle({isEdit:true}))
     }
+
+    const emptyListPokemon = ()=>{
+        for(let i = 0; i<6; i++){
+            dispatch(setListPokemon({
+                image:questionMark,
+                isEmpty:true
+            }))
+        }
+    }
+
+    useEffect(()=>{
+        emptyListPokemon()
+    },[ ])
+
     return(
         <div className="side-menu">
             {
                 listPokemon.map((pokemon,index)=>(
-                    <div key={index} onClick={log(pokemon)} className="side-menu__circle">
+                    <div key={index} onClick={()=>handleEditPokemon(pokemon)} className="side-menu__circle">
                         <img src={pokemon.image} alt="" />
                     </div>
                 ))

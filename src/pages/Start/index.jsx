@@ -1,17 +1,16 @@
 import React from "react";
 import ash from "../../assets/img/ashFront.png"
 import SideMenu from "../../components/SideMenu";
-import Modal from "../../components/Modal";
 import { randomNumber } from "../../utils";
 import api from "../../services/api";
 import { useDispatch, useSelector } from "react-redux"
-import { setPokemon, setListPokemon } from "../../features/pokemon";
+import { setPokemon, orderPokemon } from "../../features/pokemon";
 import { toggle } from "../../features/openModal";
 
 
 const Start = ()=>{
     const dispatch =  useDispatch()
-    const qtdPokemon = useSelector((state)=> state.pokemonData.listPokemon.length)
+    const qtdPokemon = useSelector((state)=> state.pokemonData.listPokemon.findIndex((pokemon)=>pokemon.isEmpty))
     
     
     const getRandomPokemon = async ()=>{
@@ -26,11 +25,11 @@ const Start = ()=>{
             types:data.types,
             hp: data.stats[0].base_stat,
             height,
-            weight
+            weight,
+            isEmpty:false
         }
 
         dispatch(setPokemon(pokemon))
-        dispatch(setListPokemon(pokemon))
         dispatch(toggle())
     }
 
@@ -38,11 +37,11 @@ const Start = ()=>{
         <div className="row start-page">
             <div className="col-lg-12 start-page__avatar-range">
                 <SideMenu/>
-                <div className={`start-page__avatar-range__content ${qtdPokemon === 6 ? "error" :null}`}>
-                    <button disabled={qtdPokemon === 6 ? true :false} onClick={getRandomPokemon}><img  src={ash} className={`start-page__avatar-range__content__boy ${qtdPokemon === 6 ? "error" :null}`} alt=""   /></button>
+                <div className={`start-page__avatar-range__content ${qtdPokemon === -1 ? "error" :null}`}>
+                    <button disabled={qtdPokemon === -1} onClick={getRandomPokemon}><img  src={ash} className={`start-page__avatar-range__content__boy ${qtdPokemon === -1 ? "error" :null}`} alt=""   /></button>
                 </div>
             </div>
-            <Modal/>
+            
         </div>
     )
 }
