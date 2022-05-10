@@ -47,6 +47,10 @@ export const pokemonData = createSlice({
       state.pokemon.name = action.payload;
       state.listPokemon[pokemonIndex] = state.pokemon;
     },
+    newCustomPokemon: (state, action)=>{
+      const newPokemon = state.listPokemon.findIndex((pokemon)=>pokemon.isEmpty)
+      state.listPokemon[newPokemon] = action.payload
+    }
   },
 });
 
@@ -56,6 +60,7 @@ export const {
   orderPokemon,
   releasePokemon,
   changePokemonName,
+  newCustomPokemon
 } = pokemonData.actions;
 
 export default pokemonData.reducer;

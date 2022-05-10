@@ -69,6 +69,14 @@
         &__edit-icon{
           margin-top: -10px;
         }
+        input{
+          height: 48px;
+          border: 1px solid #8F9BB3;
+        }
+        button{
+          border: none;
+          margin: 5px;
+        }
       }
       &__status{
         padding: 30px;
@@ -90,6 +98,7 @@
           font-size: 12px;
           font-weight: 700;
           color: #2e3a59;
+          text-transform: uppercase;
         }
         h4{
           font-size: 18px;
@@ -157,7 +166,21 @@
         }
       }
 
-
+      &__new-pokemon{
+        padding: 15px;    display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        label{
+          width: 100%;
+          input, select{
+            height: 48px;
+            border-radius: 3px;
+            border: 2px solid #E4E9F2;
+          }
+        }
+    
+      }
     }
 
     &__close-icon{

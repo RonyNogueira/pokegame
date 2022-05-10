@@ -4,7 +4,7 @@ import SideMenu from "../../components/SideMenu";
 import { randomNumber } from "../../utils";
 import api from "../../services/api";
 import { useDispatch, useSelector } from "react-redux"
-import { setPokemon, orderPokemon } from "../../features/pokemon";
+import { setPokemon } from "../../features/pokemon";
 import { toggle } from "../../features/openModal";
 
 
@@ -18,11 +18,12 @@ const Start = ()=>{
         const {data} = await api.get(`/${randomNumber()}`)
         const height = (data.height/10).toFixed(1)
         const weight = (data.weight/100).toFixed(1)
+        const types = data.types.map(({type})=>type.name)
         const pokemon = {
             id:data.id,
             name:data.name,
             image:data.sprites.other["official-artwork"].front_default,
-            types:data.types,
+            types,
             hp: data.stats[0].base_stat,
             height,
             weight,
@@ -30,7 +31,7 @@ const Start = ()=>{
         }
 
         dispatch(setPokemon(pokemon))
-        dispatch(toggle())
+        dispatch(toggle({isNew:false}))
     }
 
     return(

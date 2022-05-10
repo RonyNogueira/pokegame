@@ -26,6 +26,10 @@ const SideMenu = ()=>{
         }
     }
 
+    const handleNewPokemon = ()=>{
+        dispatch(toggle({isNew:true}))
+    }
+
     useEffect(()=>{
         emptyListPokemon()
     },[ ])
@@ -40,7 +44,7 @@ const SideMenu = ()=>{
                 ))
             }
             <div className="side-menu__plus">
-               <button><img src={plusIcon} alt="" /></button> 
+               <button onClick={handleNewPokemon}><img src={plusIcon} alt="" /></button> 
             </div>
         </div>
     )
