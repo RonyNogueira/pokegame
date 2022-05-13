@@ -9,6 +9,8 @@ import { toggle } from "../../features/openModal";
 
 const SideMenu = ()=>{
     const listPokemon = useSelector((state)=>state.pokemonData.listPokemon)
+    const qtdPokemon = useSelector((state)=> state.pokemonData.listPokemon.findIndex((pokemon)=>pokemon.isEmpty))
+
     const dispatch = useDispatch();
     
     const handleEditPokemon = (pokemon)=>{
@@ -44,7 +46,7 @@ const SideMenu = ()=>{
                 ))
             }
             <div className="side-menu__plus">
-               <button onClick={handleNewPokemon}><img src={plusIcon} alt="" /></button> 
+               <button disabled={qtdPokemon === -1} onClick={handleNewPokemon}><img src={plusIcon} alt="" /></button> 
             </div>
         </div>
     )

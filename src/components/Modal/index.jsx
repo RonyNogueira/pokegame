@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from "react"
 import pokeball from "../../assets/img/pokeball.png"
 import closeIcon from "../../assets/img/close.png"
-import newPhoto from "../../assets/img/newphoto.png"
+import newPhoto from "../../assets/img/plusimg.png"
 import { useSelector, useDispatch } from "react-redux"
 import { toggle } from "../../features/openModal"
 import typeColors from "../../utils/typeColors.json"
@@ -11,6 +11,8 @@ import confirmIcon from "../../assets/img/confirmIcon.png"
 import cancelIcon from "../../assets/img/cancelIcon.png"
 import {create_UUID} from "../../utils/index"
 import Multiselect from 'multiselect-react-dropdown';
+import BtnCustom from "../Button"
+import *  as yup from "yup"
 
 
 
@@ -26,12 +28,13 @@ const Modal = ()=>{
     const [newPokemon, setNewPokemon]= useState({
             id:create_UUID(),
             name: "",
-            image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/69.png",
+            image: "",
             types:[],
             hp: 0,
             height: 0,
             weight: 0,
     })
+    const [errors, setErrors]= useState([])
 
     const handleSavePokemon = ()=>{
         dispatch(orderPokemon(pokemon))
@@ -46,6 +49,7 @@ const Modal = ()=>{
     const handleClose = ()=>{
         setEditName(false)
         dispatch(toggle({isEdit:false}))
+        setErrors([])
     }
 
     const handleChangePokemonName = ()=>{
@@ -70,11 +74,38 @@ const Modal = ()=>{
           })  )
       }
 
-      const handleNewPokemon = ()=>{
-          dispatch(newCustomPokemon(newPokemon))
-          dispatch(toggle({isEdit:false}))
-          console.log("new",newPokemon)
+      const handleNewPokemon = async ()=>{
+        try {
+            const schema = yup.object().shape({
+                name: yup.string().required("name"),
+                image:yup.string().required("image"),
+                types: yup.array().of(yup.string()).min(1,"types"),
+                hp: yup.number().min(1,"hp").required(),
+                height: yup.number().min(1,"height").required(),
+                weight: yup.number().min(1,"weight").required()
+            })
+  
+            await schema.validate(newPokemon, { abortEarly : false, stripUnknown:true })
+            dispatch(newCustomPokemon(newPokemon))
+            dispatch(toggle({isEdit:false}))
+
+        } catch (error) {
+            setErrors(error.errors)
+        }
+
       }
+
+      const handleInputImage = (e)=>{
+        if (e.target.files && e.target.files[0]) {
+            setNewPokemon((prev)=>({
+                ...prev,
+                image: URL.createObjectURL(e.target.files[0])
+            }))
+          }
+
+      }
+
+
     useEffect(()=>{
         setName(pokemon.name)
     },[pokemon.name])
@@ -109,7 +140,7 @@ const Modal = ()=>{
                             </>
                         }
                     </div>
-                    <div className="row">
+                    <div className="row w-100">
                         <div className="col-4 col-lg-4 modal__content__box__status">
                             <h3>HP</h3>
                             <h4>{pokemon.hp}</h4>
@@ -151,49 +182,55 @@ const Modal = ()=>{
                     </div>
                     </>
                     :<div className="modal__content__box__new-pokemon">
-                        <div className="modal__content__box__img">
-                            <img src={newPhoto} alt="" />
+                        <div className={`modal__content__box__img ${errors.includes("image") && "error"}`}>
+                            <label htmlFor="imageFile">
+                                <img src={newPokemon.image || newPhoto} alt="" />
+                            </label>
+                            <input className="d-none" onChange={(e)=>handleInputImage(e)} accept=".jpg, .png, .jpeg" type="file" name="" id="imageFile" />
                         </div>
-                        <button onClick={handleNewPokemon}>salvar</button>
 
                         <div className="row">
                             <div className="mb-3">
-                                <label htmlFor="">
+                                <label htmlFor="name">
                                     Nome
-                                    <input onChange={changeFormNewPokemonData} type="text" className="form-control" name="name" />
+                                    <input onChange={changeFormNewPokemonData} type="text" className={`form-control ${errors.includes("name") && "error"}`} name="name" placeholder="Nome" id="name" />
                                 </label>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="">
+                                <label htmlFor="hp">
                                     HP
-                                    <input onChange={changeFormNewPokemonData} type="number" className="form-control" name="hp" />
+                                    <input onChange={changeFormNewPokemonData} type="number" className={`form-control ${errors.includes("hp") && "error"}`} name="hp" placeholder="HP" id="hp"/>
                                 </label>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="">
+                                <label htmlFor="height">
                                     Altura
-                                    <input onChange={changeFormNewPokemonData} type="number" className="form-control" name="height" />
+                                    <input onChange={changeFormNewPokemonData} type="number" className={`form-control ${errors.includes("height") && "error"}`} name="height" placeholder="Altura" id="height" />
                                 </label>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="">
+                                <label htmlFor="weight">
                                     Peso
-                                    <input onChange={changeFormNewPokemonData} type="number" className="form-control" name="weight" />
+                                    <input onChange={changeFormNewPokemonData} type="number" className={`form-control ${errors.includes("weight") && "error"}`} name="weight" placeholder="Peso" id="weight" />
                                 </label>
                             </div>
+
                             <div className="mb-3">
-                                <label htmlFor="">
-                                    Tipo 1
+                                <label htmlFor="">Tipo</label>
                                         <Multiselect
                                             options={typeColors}
                                             name="types"
                                             displayValue="pt_br"
                                             selectionLimit={2}
                                             onSelect={handleTypes}
-                                            placeholder="Tipos"
-                                        
+                                            placeholder="Selecione o(s) tipo(s) "
+                                            className={`${errors.includes("types") && "error"}`}
                                         />
-                                </label>
+                            </div>
+
+
+                            <div className="mb-3 d-flex justify-content-center">
+                                <BtnCustom  click={handleNewPokemon} btnText="Criar Pokemon" />
                             </div>
                         </div>
                     </div>
